@@ -22,7 +22,7 @@ class Dungeon{
     rooms = new ArrayList<Room>();
     //Makes a test tile so I have access to size (and only have to write it once for
     //changes)
-    Tile test = new Tile(new PVector(0,0),"w");
+    Tile test = new Tile(new PVector(0,0), "w");
     float size = test.size;
     
     for(int i = 0; i < col; i++){

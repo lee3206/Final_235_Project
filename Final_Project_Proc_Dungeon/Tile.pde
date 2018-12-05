@@ -3,16 +3,23 @@ class Tile{
   float size = 50;
   color tileColor;
   String type;
+  PImage tileImg;
   
   Tile(PVector tempPos, String tempType){
     pos = tempPos;
     type = tempType;
     setTile(type);
+    tileImg = null;
   }
   
   void render(){
-    fill(tileColor);
-    rect(pos.x,pos.y, size, size);
+    if(tileImg == null){
+      fill(tileColor);
+      rect(pos.x,pos.y, size, size);
+    }
+    else{
+      image(tileImg, pos.x,pos.y, size,size);
+    }
   }
   
   void update(){
@@ -30,7 +37,7 @@ class Tile{
         type = "f";
         break;
       case "w":
-        tileColor = color(99, 95, 77);
+        tileImg = loadImage("wall.jpg");
         type = "w";
         break;
       case "d":
