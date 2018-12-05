@@ -4,6 +4,7 @@ class Tile{
   color tileColor;
   String type;
   PImage tileImg;
+
   
   Tile(PVector tempPos, String tempType){
     pos = tempPos;
@@ -18,12 +19,12 @@ class Tile{
       rect(pos.x,pos.y, size, size);
     }
     else{
-      image(tileImg, pos.x,pos.y, size,size);
+      image(tileImg, pos.x,pos.y);
     }
   }
   
   void update(){
-    
+    setTile(type);
   }
   
   String returnType(){
@@ -33,11 +34,12 @@ class Tile{
   void setTile(String tempType){
     switch(tempType){
       case "f":
-        tileColor = color(120,72,0);
+        tileColor = color(100,72,0);
         type = "f";
         break;
       case "w":
         tileImg = loadImage("wall.jpg");
+        //tileColor = color(100,100,100);
         type = "w";
         break;
       case "d":
