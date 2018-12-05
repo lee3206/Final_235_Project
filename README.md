@@ -2,5 +2,6 @@
 Project repository for Final 235 project in processing (Proc-Gen Dungeon)
 
 12/4/18------------------------------
-- Uh.. not sure what is wrong, keep getting index out of bounds error, but as far as I can tell, it's not going outside of the 2-d array
+- Ok, problem is fixed. A dungeon like thing is generated with no errors!
+- Uh.. not sure what is wrong, keep getting null pointer error, but as far as I can tell
 - Initial commit
