@@ -9,7 +9,7 @@ class Dungeon{
   int currentY;
   int col;
   int row;
-  int roomDist = 5;
+  int roomDist = 3;
   int minSize = 2;
   int maxSize = 4;
   Tile[][] tiles;
@@ -45,34 +45,32 @@ class Dungeon{
   Finally, sprinkle some monsters and items liberally over dungeon
   */
   void generate(int maxFeatures){
-    startGen();
-    for(int i = 1; i < maxFeatures; i++){
-      println("Starting feature # "+(i+1));
-      Room r;
-      r = makeFeature();
-      rooms.add(r);
-      r.makeRect(tiles);
-      pickDirection();
-    }
-  }
-  
-  void startGen(){
     //start at middle of area
     int centerCol = col/2;
     int centerRow = row/2;
     currentX = centerCol;
     currentY = centerRow;
-    currentDirection = (int)random(1,4);
-    println("Starting feature # "+(1));
-    //Make starting room 3x3 in the center
-    Room r = new Room(centerCol, centerRow, 3,3);
-    r.makeRect(tiles);
-    rooms.add(r);
-    println("I'm going " + currentDirection + " now");
-    //Go to the edge of the starting room using goEdge method
-    
-    
+    //currentDirection = (int)random(1,4);
+    for(int i = 0; i < maxFeatures; i++){
+      println("Starting feature # "+(i+1));
+      Room r = null;
+      if(i == 0){
+        //Add a room to the center for the first room.
+        r = new Room(centerCol, centerRow, 3,3);
+      }
+      else{
+        if(checkFeature()){ //<>//
+          r = makeFeature();
+        }
+      }
+      if(r != null){
+        rooms.add(r);
+        r.makeRect(tiles);
+      }
+      //pickDirection();
+    }
   }
+  
   
   //boolean goEdge(Room r){
     //Use getTile method to find a tile on the direction's side of the room
@@ -80,52 +78,59 @@ class Dungeon{
     //set current x and y to correct edge based on room size and direction
   //}
   
+  boolean checkFeature(){
+    boolean dirCheck = false; //<>//
+    //for each room
+    for(int i = 0; i < rooms.size(); i++){
+      //for each direction
+      for(int j = 1; j < 5; j++){
+        currentX = rooms.get(i).xStart;
+        currentY = rooms.get(i).yStart;
+        currentDirection = j;
+        switch(currentDirection){
+          case(North):
+            if(currentY - roomDist >0){//-maxSize > 0){
+              currentY -= roomDist;
+              if(roomCheck(currentX, currentY)){
+                dirCheck = true;
+                return dirCheck;
+              }
+            }
+            break;
+          case(East):
+            if(currentX + roomDist < col){ //+maxSize< col){
+              currentX += roomDist;
+              if(roomCheck(currentX, currentY)){
+                dirCheck = true;
+                return dirCheck;
+              }
+            }
+            break;
+          case(South):
+            if(currentY + roomDist <row){//+maxSize< row){
+              currentY += roomDist;
+              if(roomCheck(currentX, currentY)){
+                dirCheck = true;
+                return dirCheck;
+              }
+            }
+            break;
+          case(West):
+            if(currentX - roomDist >0){//-maxSize > 0){
+              currentX -= roomDist;
+              if(roomCheck(currentX, currentY)){
+                dirCheck = true;
+                return dirCheck;
+              }
+            }
+            break;
+        }
+      }
+    }
+    return dirCheck;
+  }
   Room makeFeature(){
-    Room r = null;
-    boolean dirCheck = false;
-    System.out.println("I'm going to make a room at col: "+ currentX + " and row: " + currentY);
-    switch(currentDirection){
-      case(North):
-        if(currentY - roomDist -maxSize > 0){
-          currentY -= roomDist;
-          dirCheck = true;
-        }
-        if(dirCheck == true){
-          r= new Room(currentX, currentY, (int)random(minSize,maxSize),(int) random(minSize,maxSize));
-          return r;
-        }
-        break;
-      case(East):
-        if(currentX + roomDist +maxSize< col){
-          currentX += roomDist;
-          dirCheck = true;
-        }
-        if(dirCheck == true){
-          r = new Room(currentX, currentY, (int)random(minSize,maxSize),(int)random(minSize,maxSize));
-          return r;
-        }
-        break;
-      case(South):
-        if(currentY + roomDist +maxSize< row){
-          currentY += roomDist;
-          dirCheck = true;
-        }
-        if(dirCheck == true){
-          r = new Room(currentX, currentY, (int)random(minSize,maxSize), (int)random(minSize,maxSize));
-          return r;
-        }
-        break;
-      case(West):
-        if(currentX - roomDist -maxSize > 0){
-          currentX -= roomDist;
-          dirCheck = true;
-        }
-        if(dirCheck == true){
-          r = new Room(currentX, currentY, (int)random(minSize,maxSize), (int)random(minSize,maxSize));
-          return r;
-        }
-        break;
-    } 
+    Room r = new Room(currentX, currentY, (int)random(minSize,maxSize),(int) random(minSize,maxSize));
     return r;
   }
   
@@ -154,6 +159,16 @@ class Dungeon{
         //popMatrix();
       }
     }
+  }
+  
+  boolean roomCheck(int testX, int testY){
+    for(int i = 0; i < rooms.size(); i++){
+      Room r = rooms.get(i);
+      if(r.xStart == testX && r.yStart == testY){
+        return false;
+      }
+    }
+    return true;
   }
   
   void pickDirection(){

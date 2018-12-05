@@ -15,7 +15,7 @@ class Room{
   }
   
   void makeRect(Tile[][] tiles){
-    println("I'm starting at col: "+xStart+ " row: "+yStart); //<>//
+    println("I'm starting at col: "+xStart+ " row: "+yStart);
     //put the current X/Y marker in center of room.
     int fixedX;
     int fixedY;

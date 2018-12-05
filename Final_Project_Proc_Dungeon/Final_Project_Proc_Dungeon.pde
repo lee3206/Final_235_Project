@@ -12,7 +12,7 @@ void setup(){
   size(1200,1200);
   
   d = new Dungeon(22,22);
-  d.generate(5);
+  d.generate(40);
   d.update();
   d.render();
  
