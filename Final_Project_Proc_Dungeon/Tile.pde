@@ -39,7 +39,6 @@ class Tile{
         break;
       case "w":
         tileImg = loadImage("wall.jpg");
-        //tileColor = color(100,100,100);
         type = "w";
         break;
       case "d":

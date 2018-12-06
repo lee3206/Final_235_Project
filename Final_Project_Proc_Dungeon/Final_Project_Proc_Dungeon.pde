@@ -6,7 +6,11 @@
 //pixel art dungeon trick: test the color of a block for collisions to set up
 //properties. i.e. black is wall, green is ground. Can also try and mess with
 //a range if you want to drop in shaders/masks
+
+//tasks:   Add collision with walls for player
+         //Add pathing for dungeon
 Dungeon d;
+Player p;
 
 void setup(){
   size(1200,1200);
@@ -15,29 +19,31 @@ void setup(){
   d.generate();
   d.addStairs();
   d.addItems();
+  p = new Player(d.getStart());
 } 
 
 void draw(){
-  // Not bothering with draw until I have something I need to draw over and over
-  background(0);
+  //background(0);
   d.update();
   d.render();
-  
+  p.update();
+  p.render();
+  //p.collision(d.tiles[int(p.pos.x)][int(p.pos.y)]);
 }
 
 void keyPressed(){
   if(key == CODED){
     if(keyCode == LEFT){
-      d.moveIt(-50,0);
+      p.pos.add(-50,0);
     }
     if(keyCode == RIGHT){
-      d.moveIt(50,0);
+      p.pos.add(50,0);
     }
     if(keyCode == UP){
-      d.moveIt(0,-50);
+      p.pos.add(0,-50);
     }
     if(keyCode == DOWN){
-      d.moveIt(0,50);
+      p.pos.add(0,50);
     }
   }
 }

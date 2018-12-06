@@ -16,6 +16,11 @@ class Dungeon{
   int maxSize = 4;
   Tile[][] tiles;
   ArrayList<Room> rooms;
+  PVector startVector = new PVector();
+  PVector endVector = new PVector();
+  PVector key1 = new PVector();
+  PVector key2 = new PVector();
+  PVector key3 = new PVector();
   
   Dungeon(int tempCol, int tempRow){
     col = tempCol;
@@ -28,7 +33,6 @@ class Dungeon{
     //changes)
     Tile test = new Tile(new PVector(0,0), "w");
     float size = test.size;
-    
     for(int i = 0; i < col; i++){
       for(int j = 0; j < row;j++){
         tiles[i][j] = new Tile(new PVector(i*size,j*size), "w");
@@ -84,6 +88,7 @@ class Dungeon{
     }
     
     while(run);
+    println("Cancel feature " + i + ", floor is full");
   }
   /* Depreciated in favor of a do-while loop
   void generate(int maxFeatures){
@@ -169,7 +174,7 @@ class Dungeon{
   //*Random here means in different places, but always "somewhat far" away
   void addStairs(){
     //start at the center
-    currentX = centerCol;
+    currentX = centerCol; //<>//
     currentY = centerRow;
     //generate some random numbers for the distance
     //numbers are between 1/8 and 1/2 of the total size of the dungeon
@@ -208,8 +213,13 @@ class Dungeon{
         break;
       }
     }
-      tiles[randomX][randomY].setTile("us");
+      //sets image to null for using colors, shouldnt matter when I have an image
+      tiles[randomX][randomY].tileImg = null;
+      tiles[randomX][randomY].setTile("us"); //<>//
+      startVector.add(randomX, randomY);
+      tiles[dsRandomX][dsRandomY].tileImg = null;
       tiles[dsRandomX][dsRandomY].setTile("ds");
+      endVector.add(dsRandomX,dsRandomY);
   }
   
   void addItems(){
@@ -222,6 +232,17 @@ class Dungeon{
       int randomY = int(random(0, row));
       if(tiles[randomX][randomY].getType() == "f"){
         tiles[randomX][randomY].setTile("i");
+        switch(counter){
+          case 0:
+            key1.add(randomX, randomY);
+            break;
+          case 1:
+            key2.add(randomX, randomY);
+            break;
+          case 2:
+            key3.add(randomX, randomY);
+            break;
+        }
         counter++;
       }
       
@@ -299,5 +320,10 @@ class Dungeon{
       return null;
     }
     return tiles[x][y];
+  }
+  
+  Tile getStart(){
+    Tile t = tiles[int(startVector.x)][int(startVector.y)];
+    return t;
   }
 }
