@@ -11,38 +11,33 @@ Dungeon d;
 void setup(){
   size(1200,1200);
   
-  d = new Dungeon(22,22);
-  d.generate(50);
-  d.update();
-  d.render();
- 
+  d = new Dungeon(24,24);
+  d.generate();
+  d.addStairs();
+  d.addItems();
 } 
 
 void draw(){
-  /* Not bothering with draw until I have something I need to draw over and over
+  // Not bothering with draw until I have something I need to draw over and over
   background(0);
-  for(int i = 0; i < col; i++){
-    for(int j = 0; j < row;j++){
-      tiles[i][j].update();
-      tiles[i][j].render();
-    }
-  }
-  */
+  d.update();
+  d.render();
+  
 }
 
 void keyPressed(){
   if(key == CODED){
     if(keyCode == LEFT){
-      d.moveIt(-20,0);
+      d.moveIt(-50,0);
     }
     if(keyCode == RIGHT){
-      d.moveIt(20,0);
+      d.moveIt(50,0);
     }
     if(keyCode == UP){
-      d.moveIt(0,-20);
+      d.moveIt(0,-50);
     }
     if(keyCode == DOWN){
-      d.moveIt(0,20);
+      d.moveIt(0,50);
     }
   }
 }

@@ -27,7 +27,7 @@ class Tile{
     setTile(type);
   }
   
-  String returnType(){
+  String getType(){
     return type;
   }
   
@@ -45,8 +45,22 @@ class Tile{
       case "d":
         tileColor = color(99, 150, 90);
         type = "d";
+        break;
+      case "us":
+        tileColor = color(10,10,200);
+        type = "us";
+        break;
+      case "ds":
+        tileColor = color(10,200,10);
+        type = "ds";
+        break;
+      case "i":
+        tileColor = color(200,10,10);
+        type = "i";
+        break;
       default:
         tileColor = color(0);
+        break;
     }
   }
 }
