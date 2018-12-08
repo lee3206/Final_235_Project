@@ -4,29 +4,30 @@ class Player{
   PImage img;
   PVector vel;
   PVector tilePos;
+  int xIndex;
+  int yIndex;
   
   
-  Player(Tile tile){
-    pos = tile.pos;
-    size = tile.size;
+  Player(int x, int y, int tempSize){
+    xIndex = x;
+    yIndex = y;
+    size = tempSize;
+    pos = new PVector(xIndex * size, yIndex * size);
+    //When a tile is created, it is placed at an index (i/j) times the size
+    //of the tile. So to get the index, I deconstruct that).
     vel = new PVector();
     img = loadImage("player.png");
   }
   
   void update(){
-    pos.add(vel);
+    //pos.add(vel);
   }
   
   void render(){
-    image(img, pos.x, pos.y);
+    image(img, pos.x , pos.y);
   }
-  
+
   //Add collision with walls
   //AABB half width, half height, compare by x and y, use abs to apply to both x and y
-  
-  void collision(){
-    
-    
-  }
   
 }

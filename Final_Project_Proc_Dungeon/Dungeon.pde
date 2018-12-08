@@ -11,12 +11,14 @@ class Dungeon{
   int row;
   int centerCol;
   int centerRow;
+  int tileSize;
   int roomDist = 3;
   int minSize = 2;
   int maxSize = 4;
   Tile[][] tiles;
   ArrayList<Room> rooms;
-  PVector startVector = new PVector();
+  int startX;
+  int startY;
   PVector endVector = new PVector();
   PVector key1 = new PVector();
   PVector key2 = new PVector();
@@ -32,10 +34,10 @@ class Dungeon{
     //Makes a test tile so I have access to size (and only have to write it once for
     //changes)
     Tile test = new Tile(new PVector(0,0), "w");
-    float size = test.size;
+    tileSize = int(test.size);
     for(int i = 0; i < col; i++){
       for(int j = 0; j < row;j++){
-        tiles[i][j] = new Tile(new PVector(i*size,j*size), "w");
+        tiles[i][j] = new Tile(new PVector(i*tileSize,j*tileSize), "w");
       }
     }
   }
@@ -174,7 +176,7 @@ class Dungeon{
   //*Random here means in different places, but always "somewhat far" away
   void addStairs(){
     //start at the center
-    currentX = centerCol; //<>//
+    currentX = centerCol;
     currentY = centerRow;
     //generate some random numbers for the distance
     //numbers are between 1/8 and 1/2 of the total size of the dungeon
@@ -215,8 +217,9 @@ class Dungeon{
     }
       //sets image to null for using colors, shouldnt matter when I have an image
       tiles[randomX][randomY].tileImg = null;
-      tiles[randomX][randomY].setTile("us"); //<>//
-      startVector.add(randomX, randomY);
+      tiles[randomX][randomY].setTile("us");
+      startX = randomX;
+      startY = randomY;
       tiles[dsRandomX][dsRandomY].tileImg = null;
       tiles[dsRandomX][dsRandomY].setTile("ds");
       endVector.add(dsRandomX,dsRandomY);
@@ -225,7 +228,7 @@ class Dungeon{
   void addItems(){
     //Lets call these keys for the demo.
     //Find random floors tiles in the dungeon and switch them to keys
-    boolean allPlaced = false; //<>//
+    boolean allPlaced = false;
     int counter = 0;
     do{
       int randomX = int(random(0, col));
@@ -254,6 +257,15 @@ class Dungeon{
     while(!allPlaced);
   }
   
+  boolean collision(int xIn, int yIn){
+    if(tiles[xIn][yIn].getType().equals("w")){ //<>//
+      return true;
+    }
+    else{
+      return false;
+    }
+    
+  }
   
   Room makeFeature(){
     Room r = new Room(currentX, currentY, (int)random(minSize,maxSize),(int) random(minSize,maxSize));
@@ -323,7 +335,8 @@ class Dungeon{
   }
   
   Tile getStart(){
-    Tile t = tiles[int(startVector.x)][int(startVector.y)];
+    Tile t = new Tile(new PVector(),"");
+    t = tiles[startX][startY];
     return t;
   }
 }

@@ -4,6 +4,8 @@ class Tile{
   color tileColor;
   String type;
   PImage tileImg;
+  int xInd;
+  int yInd;
 
   
   Tile(PVector tempPos, String tempType){

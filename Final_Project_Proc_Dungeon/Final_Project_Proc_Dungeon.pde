@@ -7,7 +7,7 @@
 //properties. i.e. black is wall, green is ground. Can also try and mess with
 //a range if you want to drop in shaders/masks
 
-//tasks:   Add collision with walls for player
+//tasks:   Add collision with walls for player: DONE
          //Add pathing for dungeon
 Dungeon d;
 Player p;
@@ -19,7 +19,7 @@ void setup(){
   d.generate();
   d.addStairs();
   d.addItems();
-  p = new Player(d.getStart());
+  p = new Player(d.startX, d.startY, d.tileSize);
 } 
 
 void draw(){
@@ -32,18 +32,32 @@ void draw(){
 }
 
 void keyPressed(){
+  int xInd = p.xIndex;
+  int yInd = p.yIndex; //<>//
   if(key == CODED){
     if(keyCode == LEFT){
-      p.pos.add(-50,0);
+      if(!d.collision(xInd - 1, yInd)){
+        p.pos.add(-50,0);
+        p.xIndex -= 1;
+      }
     }
-    if(keyCode == RIGHT){
-      p.pos.add(50,0);
+    else if(keyCode == RIGHT){ 
+      if(!d.collision(xInd + 1, yInd)){
+        p.pos.add(50,0);
+        p.xIndex += 1;
+      }
     }
-    if(keyCode == UP){
-      p.pos.add(0,-50);
+    else if(keyCode == UP){
+      if(!d.collision(xInd, yInd-1)){
+        p.pos.add(0,-50);
+        p.yIndex -= 1;
+      }
     }
-    if(keyCode == DOWN){
-      p.pos.add(0,50);
+    else if(keyCode == DOWN){
+      if(!d.collision(xInd,yInd + 1)){
+        p.pos.add(0,50);
+        p.yIndex += 1;
+      }
     }
   }
 }
