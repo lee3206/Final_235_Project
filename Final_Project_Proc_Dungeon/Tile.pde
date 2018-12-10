@@ -11,7 +11,7 @@ class Tile{
   Tile(PVector tempPos, String tempType){
     pos = tempPos;
     type = tempType;
-    setTile(type);
+    setType(type);
     tileImg = null;
   }
   
@@ -26,14 +26,14 @@ class Tile{
   }
   
   void update(){
-    setTile(type);
+    setType(type);
   }
   
   String getType(){
     return type;
   }
   
-  void setTile(String tempType){
+  void setType(String tempType){
     switch(tempType){
       case "f":
         tileColor = color(100,72,0);

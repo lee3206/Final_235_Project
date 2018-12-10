@@ -23,6 +23,8 @@ class Dungeon{
   PVector key1 = new PVector();
   PVector key2 = new PVector();
   PVector key3 = new PVector();
+  int keyCount = 0;
+  boolean dungeonDone = false;
   
   Dungeon(int tempCol, int tempRow){
     col = tempCol;
@@ -92,34 +94,7 @@ class Dungeon{
     while(run);
     println("Cancel feature " + i + ", floor is full");
   }
-  /* Depreciated in favor of a do-while loop
-  void generate(int maxFeatures){
-    //start at middle of area
-    int centerCol = col/2;
-    int centerRow = row/2;
-    currentX = centerCol;
-    currentY = centerRow;
-    //currentDirection = (int)random(1,4);
-    for(int i = 0; i < maxFeatures; i++){
-      println("Starting feature # "+(i+1));
-      Room r = null;
-      if(i == 0){
-        //Add a room to the center for the first room.
-        r = new Room(centerCol, centerRow, 3,3);
-      }
-      else{
-        if(checkFeature()){ //<>//
-          r = makeFeature();
-        }
-      }
-      if(r != null){
-        rooms.add(r);
-        r.makeRect(tiles);
-      }
-      //pickDirection();
-    }
-  }
-  */
+   //<>//
   boolean checkFeature(){
     boolean dirCheck = false;
     //for each room
@@ -216,12 +191,12 @@ class Dungeon{
       }
     }
       //sets image to null for using colors, shouldnt matter when I have an image
-      tiles[randomX][randomY].tileImg = null;
-      tiles[randomX][randomY].setTile("us");
+      //tiles[randomX][randomY].tileImg = null;
+      tiles[randomX][randomY].setType("us");
       startX = randomX;
       startY = randomY;
-      tiles[dsRandomX][dsRandomY].tileImg = null;
-      tiles[dsRandomX][dsRandomY].setTile("ds");
+      //tiles[dsRandomX][dsRandomY].tileImg = null;
+      tiles[dsRandomX][dsRandomY].setType("ds");
       endVector.add(dsRandomX,dsRandomY);
   }
   
@@ -233,8 +208,8 @@ class Dungeon{
     do{
       int randomX = int(random(0, col));
       int randomY = int(random(0, row));
-      if(tiles[randomX][randomY].getType() == "f"){
-        tiles[randomX][randomY].setTile("i");
+      if(tiles[randomX][randomY].getType().equals("f")){
+        tiles[randomX][randomY].setType("i");
         switch(counter){
           case 0:
             key1.add(randomX, randomY);
@@ -256,10 +231,67 @@ class Dungeon{
     }
     while(!allPlaced);
   }
+  //Start at the start stairs, and move random x and y paths towards the exit
+  //Every part of the loop, turn walls it sees into floors
+  //Makes it so there is at least one path towards the exit
+  void setPath(){
+    currentX = startX; //<>//
+    currentY = startY;
+    int endX = int(endVector.x);
+    int endY = int(endVector.y);
+    do{
+      //If the current tile is more to the left than the end
+      if(currentX > endX){
+        currentX--;
+      }
+      //If the current tile is more to the right than the end
+      if(currentX < endX){
+        currentX++;
+      }
+      //If the current tile is higher than the end
+      if(currentY < endY){
+        currentY++;
+      }
+      //If the current tile is lower than the end
+      if(currentY > endY){
+        currentY--;
+      }
+      if(tiles[currentX][currentY].getType().equals("w")){
+        tiles[currentX][currentY].setType("f");
+      }
+    }
+    while(currentX != endX && currentY != endY);
+  }
+  
+  void randomNoise(){
+    //Go through the entire floor
+    //flipping 10% of walls to floors and floors to walls
+    //This ignores x = 0 & col, y = 0 & row 
+    for(int i = 1; i < col-1; i++){
+      for(int j = 1; j < row-1; j++){
+        int d10 = int(random(10));
+        Tile t = tiles[i][j];
+        if(d10 == 10 && t.getType().equals("w")){
+          t.setType("f");
+        }
+        else if(d10 == 10 && t.getType().equals("f")){
+          t.setType("w");
+        }
+      }
+    }
+  }
   
   boolean collision(int xIn, int yIn){
     if(tiles[xIn][yIn].getType().equals("w")){ //<>//
       return true;
+    }
+    else if(tiles[xIn][yIn].getType().equals("i")){
+      takeKey(xIn, yIn);
+      return false;
+    }
+    else if(tiles[xIn][yIn].getType().equals("ds")){
+      takeStairs(xIn, yIn);
+      return false;
     }
     else{
       return false;
@@ -272,12 +304,16 @@ class Dungeon{
     return r;
   }
   
-  void update(){
+  boolean update(){
     for(int i = 0; i < col; i++){
       for(int j = 0; j < row;j++){
         tiles[i][j].update();
       }
     }
+    if(dungeonDone == true){
+      return true;
+    }
+    return false;
   }
   
   void render(){
@@ -338,5 +374,18 @@ class Dungeon{
     Tile t = new Tile(new PVector(),"");
     t = tiles[startX][startY];
     return t;
+  }
+  
+  void takeKey(int x, int y){
+    if(tiles[x][y].getType().equals("i")){
+      tiles[x][y].setType("f");
+      keyCount++;
+    }
+  }
+  
+  void takeStairs(int x, int y){
+    if(tiles[x][y].getType().equals("ds") && keyCount == 3){
+      dungeonDone = true;
+    }
   }
 }

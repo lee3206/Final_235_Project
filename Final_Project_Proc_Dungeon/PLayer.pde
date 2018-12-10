@@ -20,7 +20,7 @@ class Player{
   }
   
   void update(){
-    //pos.add(vel);
+    pos.set(xIndex * size, yIndex * size);
   }
   
   void render(){

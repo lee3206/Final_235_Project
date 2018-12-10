@@ -38,7 +38,7 @@ class Room{
     for(int i = xStart-(fixedX + nudgeX); i < xStart+fixedX; i++){
       for(int j = yStart-(fixedY + nudgeY);j < yStart+fixedY; j++){
         //get existing position, set tile to floor at that position
-        tiles[i][j].setTile("f");
+        tiles[i][j].setType("f");
       }
     }
     println("Done, made a "+xSize+ " by " +ySize+ " rec room");
