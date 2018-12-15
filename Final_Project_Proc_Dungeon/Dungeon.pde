@@ -23,6 +23,7 @@ class Dungeon{
   PVector key1 = new PVector();
   PVector key2 = new PVector();
   PVector key3 = new PVector();
+  ArrayList<PVector> keyList;
   int keyCount = 0;
   boolean dungeonDone = false;
   
@@ -47,14 +48,15 @@ class Dungeon{
   /* Gen Plan
   Fill the whole map with solid earth (Done in setup)
   Dig out a single room in the centre of the map (Done, see startGen)
-  Pick a wall of any room (working, first time through pick starting)
-  Decide upon a new feature to build
-  See if there is room to add the new feature through the chosen wall
+  (IK: Can put not in center for more variety)
+  Pick a direction from any room (done)
+  Decide upon a new feature to build (simplistic but done)
+  See if there is room to add the new feature (done)
   If yes, continue. If no, go back to step 3
-  Add the feature through the chosen wall
+  Add the feature in direction (done)
   Go back to step 3, until the dungeon is complete
-  Add the up and down staircases at random points in map
-  Finally, sprinkle some monsters and items liberally over dungeon
+  Add the up and down staircases at random points in map (done)
+  Finally, sprinkle some monsters and items liberally over dungeon (items done, no monsters)
   */
   
   /*"Pathfinding" plans
@@ -72,7 +74,8 @@ class Dungeon{
     boolean run = true;
     int i = 0;
     do{ //<>//
-      println("Starting feature # "+(i+1));
+      //Turning off for MJ
+      //println("Starting feature # "+(i+1));
       Room r = null;
       if(i == 0){
         //Add a room to the center for the first room.
@@ -90,9 +93,9 @@ class Dungeon{
       }
       i++;
     }
-    
     while(run);
-    println("Cancel feature " + i + ", floor is full");
+    //Turning off for MJ
+    //println("Cancel feature " + i + ", floor is full");
   }
    //<>//
   boolean checkFeature(){
@@ -101,8 +104,8 @@ class Dungeon{
     for(int i = 0; i < rooms.size(); i++){
       //for each direction
       for(int j = 1; j < 5; j++){
-        currentX = rooms.get(i).xStart;
-        currentY = rooms.get(i).yStart;
+        currentX = rooms.get(i).xStart + int(random(-1,1));
+        currentY = rooms.get(i).yStart + int(random(-1,1));
         currentDirection = j;
         switch(currentDirection){
           case(North):
@@ -190,12 +193,9 @@ class Dungeon{
         break;
       }
     }
-      //sets image to null for using colors, shouldnt matter when I have an image
-      //tiles[randomX][randomY].tileImg = null;
       tiles[randomX][randomY].setType("us");
       startX = randomX;
       startY = randomY;
-      //tiles[dsRandomX][dsRandomY].tileImg = null;
       tiles[dsRandomX][dsRandomY].setType("ds");
       endVector.add(dsRandomX,dsRandomY);
   }
@@ -226,42 +226,58 @@ class Dungeon{
       
       if(counter == 3){
         allPlaced = true;
+        keyList = new ArrayList<PVector>();
+        keyList.add(key1);
+        keyList.add(key2);
+        keyList.add(key3);
+        keyList.add(endVector);
       }
       
     }
     while(!allPlaced);
   }
-  //Start at the start stairs, and move random x and y paths towards the exit
+  
+  
+  //Start at the start stairs, and move towards the goal in
+  //x and y paths.
   //Every part of the loop, turn walls it sees into floors
-  //Makes it so there is at least one path towards the exit
-  void setPath(){
+  //Makes it so there is at least one path towards each key and the exit.
+  void setPathKeys(){
     currentX = startX; //<>//
     currentY = startY;
-    int endX = int(endVector.x);
-    int endY = int(endVector.y);
-    do{
-      //If the current tile is more to the left than the end
-      if(currentX > endX){
-        currentX--;
-      }
-      //If the current tile is more to the right than the end
-      if(currentX < endX){
-        currentX++;
-      }
-      //If the current tile is higher than the end
-      if(currentY < endY){
-        currentY++;
-      }
-      //If the current tile is lower than the end
-      if(currentY > endY){
-        currentY--;
-      }
-      if(tiles[currentX][currentY].getType().equals("w")){
-        tiles[currentX][currentY].setType("f");
-      }
+    for(int i = 0; i < keyList.size();i++){
+      int nextX = int(keyList.get(i).x);
+      int nextY = int(keyList.get(i).y);
+      boolean stop = false;
+      //X loop
+      do{
+        //If the current tile is more to the right than the end
+        if(currentX > nextX){
+          currentX--;
+        }
+        //If the current tile is more to the left than the end
+        else if(currentX < nextX){
+          currentX++;
+        }
+        //Y look
+        //If the current tile is higher than the end
+        else if(currentY < nextY){
+          currentY++;
+        }
+        //If the current tile is lower than the end
+        else if(currentY > nextY){
+          currentY--;
+        }
+        if(tiles[currentX][currentY].getType().equals("w")){
+          tiles[currentX][currentY].setType("f");
+        }
+        if(currentX == nextX && currentY == nextY){
+          stop = true;
+        }
+      }while(!stop);
     }
-    while(currentX != endX && currentY != endY);
   }
+  
   
   void randomNoise(){
     //Go through the entire floor
@@ -324,17 +340,6 @@ class Dungeon{
     }
   }
   
-  void moveIt(float move, float it){
-    for (int i = 0; i < col; i++) {
-      for (int j = 0; j < row; j++) {
-        pushMatrix();
-        translate(move, it);
-        tiles[i][j].render();
-        popMatrix();
-      }
-    }
-  }
-  
   boolean roomCheck(int testX, int testY){
     for(int i = 0; i < rooms.size(); i++){
       Room r = rooms.get(i);
@@ -344,25 +349,7 @@ class Dungeon{
     }
     return true;
   }
-  
-  void pickDirection(){
-    currentDirection = (int)random(1,4);
-    switch(currentDirection){
-      case 1:
-        println("I'm going North now!");
-        break;
-      case 2:
-        println("I'm going East now!");
-        break;
-      case 3:
-        println("I'm going South now!");
-        break;
-      case 4:
-        println("I'm going West now!");
-        break;
-    }  
-  }
-  
+ 
   Tile getTile(int x, int y){
     if(x < 0 || y < 0 || x >= col || y >= row){
       return null;

@@ -26,8 +26,4 @@ class Player{
   void render(){
     image(img, pos.x , pos.y);
   }
-
-  //Add collision with walls
-  //AABB half width, half height, compare by x and y, use abs to apply to both x and y
-  
 }

@@ -15,7 +15,8 @@ class Room{
   }
   
   void makeRect(Tile[][] tiles){
-    println("I'm starting at col: "+xStart+ " row: "+yStart);
+    //Turning off for MJ
+    //println("I'm starting at col: "+xStart+ " row: "+yStart);
     //put the current X/Y marker in center of room.
     int fixedX;
     int fixedY;
@@ -41,10 +42,13 @@ class Room{
         tiles[i][j].setType("f");
       }
     }
-    println("Done, made a "+xSize+ " by " +ySize+ " rec room");
+    //Turning this off for MJ
+    //println("Done, made a "+xSize+ " by " +ySize+ " rec room");
   }
   
-  void printCenter(){
+  //Turning this off for MJ too
+  /*void printCenter(){
     System.out.println("I'm a room at col: "+xStart+ " row: "+yStart);
   }
+  */
 }

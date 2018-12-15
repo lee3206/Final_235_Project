@@ -36,6 +36,7 @@ class Tile{
   void setType(String tempType){
     switch(tempType){
       case "f":
+        tileImg = null;
         tileColor = color(100,72,0);
         type = "f";
         break;
@@ -48,15 +49,15 @@ class Tile{
         type = "d";
         break;
       case "us":
-        tileColor = color(10,10,200);
+        tileImg = loadImage("stairs_up.png");
         type = "us";
         break;
       case "ds":
-        tileColor = color(10,200,10);
+        tileImg = loadImage("stairs_down.png");
         type = "ds";
         break;
       case "i":
-        tileColor = color(200,10,10);
+        tileImg = loadImage("key.png");
         type = "i";
         break;
       default:
