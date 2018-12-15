@@ -1,5 +1,10 @@
 # Lee Taber's Final_235_Project
 Project repository for Final 235 project in processing (Proc-Gen Dungeon)
+12/14/18-----------------------------
+-Added ful pathfinding, all floors should be solveable (not super complex though)
+-Keys have an icon, grab three keys to go down a floor
+-Dungeon is now a five floor tower
+-Title and end slides (wooooo)
 
 12/9/18------------------------------
 -Added first pass at pathfinding (not all floors are solveable still -_-)
